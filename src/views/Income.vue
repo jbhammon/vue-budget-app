@@ -3,12 +3,17 @@
         <h2>Your Income</h2>
         <table>
             <tr class='data-table--row' v-bind:key="item.id" v-for="item in income">
+                <td>{{ item.date }}</td>
                 <td style='min-width: 20%;'>${{ item.amount }}</td>
                 <td v-if='categories' >{{ categories[item.category] }}</td>
                 <td>{{ item.description }}</td>
                 <td><button @click="this.$store.dispatch('deleteIncomeItem', item.id)">x</button></td>
             </tr>
         </table>
+
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" v-model='nextDate'>
+
         <label for='income-amount'>Amount</label>
         <input id='income-amount' type='text' v-model='nextAmount'>
 
@@ -21,7 +26,7 @@
         
         <label for='income-description'>Description</label>
         <input id='income-description' type='text' v-model="nextDescription">
-        <button @click="this.$store.dispatch('postIncomeItem', {date: '2021-01-01', amount: nextAmount, description: nextDescription, category: nextCategory})">
+        <button @click="this.$store.dispatch('postIncomeItem', {date: nextDate, amount: nextAmount, description: nextDescription, category: nextCategory})">
             Add
         </button>
     </div>
@@ -50,6 +55,7 @@ export default {
     },
     data() {
         return {
+            nextDate: '',
             nextAmount: '',
             nextCategory: '',
             nextDescription: '',
