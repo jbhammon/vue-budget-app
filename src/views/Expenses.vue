@@ -3,12 +3,17 @@
         <h2>Your Expenses</h2>
         <table>
             <tr class='data-table--row' v-bind:key="expense.id" v-for="expense in expenses">
+                <td>{{ expense.date }}</td>
                 <td style='min-width: 20%;'>${{ expense.amount }}</td>
                 <td v-if='categories' >{{ categories[expense.category] }}</td>
                 <td>{{ expense.description }}</td>
                 <td><button @click="this.$store.dispatch('deleteExpenseItem', expense.id)">x</button></td>
             </tr>
         </table>
+
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" v-model='nextDate'>
+
         <label for='expense-amount'>Amount</label>
         <input id='expense-amount' type='text' v-model='nextAmount'>
         
@@ -21,7 +26,7 @@
 
         <label for='expense-description'>Description</label>
         <input id='expense-description' type='text' v-model='nextDescription'>
-        <button @click="this.$store.dispatch('postExpenseItem', {date: '2021-01-01', amount: nextAmount, description: nextDescription, category: nextCategory})">
+        <button @click="this.$store.dispatch('postExpenseItem', {date: nextDate, amount: nextAmount, description: nextDescription, category: nextCategory})">
             Add
         </button>
     </div>
@@ -50,6 +55,7 @@ export default {
     },
     data() {
         return {
+            nextDate: '',
             nextAmount: '',
             nextCategory: '',
             nextDescription: '',
