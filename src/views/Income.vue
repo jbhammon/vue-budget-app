@@ -29,12 +29,70 @@
         <button @click="this.$store.dispatch('postIncomeItem', {date: nextDate, amount: nextAmount, description: nextDescription, category: nextCategory})">
             Add
         </button>
+
+        <button
+            type="button"
+            class="btn"
+            @click="showModal"
+            >
+            Open Modal!
+        </button>
+
+        <modal
+            v-show="isModalVisible"
+            @close="closeModal"    
+        >
+            <template v-slot:header>
+                Add an income
+                <button
+                    type="button"
+                    class="btn-close"
+                    @click="closeModal"
+                    aria-label='Close modal'
+                >
+                    x
+                </button>
+            </template>
+            <template v-slot:body>
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" v-model='nextDate'>
+
+                <label for='income-amount'>Amount</label>
+                <input id='income-amount' type='text' v-model='nextAmount'>
+
+                <label for='income-category'>Category</label>
+                <select id='income-category' name='category' v-model='nextCategory'>
+                    <option v-bind:key=id v-for="(name, id) in categories" v-bind:value="id">
+                        {{ name }}
+                    </option>
+                </select>
+                
+                <label for='income-description'>Description</label>
+                <input id='income-description' type='text' v-model="nextDescription">
+                <button @click="this.$store.dispatch('postIncomeItem', {date: nextDate, amount: nextAmount, description: nextDescription, category: nextCategory})">
+                    Add
+                </button>
+            </template>
+        </modal>
     </div>
 </template>
 
 <script>
+import modal from '../components/Modal';
+
 export default {
     name: "Income",
+    components: {
+        modal,
+    },
+    methods: {
+        showModal() {
+            this.isModalVisible = true;
+        },
+        closeModal() {
+            this.isModalVisible = false;
+        },
+    },
     computed: {
         income () {
             return this.$store.state.income;
@@ -59,6 +117,7 @@ export default {
             nextAmount: '',
             nextCategory: '',
             nextDescription: '',
+            isModalVisible: false,
         }
     },
 }
