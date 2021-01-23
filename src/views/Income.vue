@@ -11,7 +11,7 @@
             </tr>
         </table>
 
-        <label for="date">Date:</label>
+        <!-- <label for="date">Date:</label>
         <input type="date" id="date" name="date" v-model='nextDate'>
 
         <label for='income-amount'>Amount</label>
@@ -28,14 +28,14 @@
         <input id='income-description' type='text' v-model="nextDescription">
         <button @click="this.$store.dispatch('postIncomeItem', {date: nextDate, amount: nextAmount, description: nextDescription, category: nextCategory})">
             Add
-        </button>
+        </button> -->
 
         <button
             type="button"
             class="btn"
             @click="showModal"
             >
-            Open Modal!
+            Add income
         </button>
 
         <modal
@@ -69,7 +69,9 @@
                 
                 <label for='income-description'>Description</label>
                 <input id='income-description' type='text' v-model="nextDescription">
-                <button @click="this.$store.dispatch('postIncomeItem', {date: nextDate, amount: nextAmount, description: nextDescription, category: nextCategory})">
+            </template>
+            <template v-slot:footer>
+                <button @click="saveIncome">
                     Add
                 </button>
             </template>
@@ -91,6 +93,26 @@ export default {
         },
         closeModal() {
             this.isModalVisible = false;
+        },
+        saveIncome() {
+            // send dispatch
+            this.$store.dispatch('postIncomeItem', {date: this.nextDate, amount: this.nextAmount, description: this.nextDescription, category: this.nextCategory})
+            .then(res => {
+                console.log(res);
+            })
+            .catch(error => {
+                this.error = error;
+                this.errorState = true;
+            });
+            
+            // if success
+                // show success message
+                // clear form values
+                // if close
+                    // close modal
+            // else
+                // show error state
+            return;
         },
     },
     computed: {
@@ -118,6 +140,8 @@ export default {
             nextCategory: '',
             nextDescription: '',
             isModalVisible: false,
+            error: null,
+            errorState: false,
         }
     },
 }

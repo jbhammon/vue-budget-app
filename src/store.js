@@ -60,9 +60,16 @@ const store = createStore({
       });
     },
     postIncomeItem (context, item) {
-      axios.post('http://localhost:8000/income/', item)
-      .then(() => {
-        context.dispatch('getIncomeItems');
+      return new Promise((resolve, reject) => {
+        axios.post('http://localhost:8000/income/', item)
+        .then(res => {
+          context.dispatch('getIncomeItems');
+          resolve(res);
+        })
+        .catch(error => {
+          // should have an error dispatch here
+          reject(error);
+        });
       });
     },
     postExpenseItem (context, item) {
