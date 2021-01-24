@@ -71,8 +71,11 @@
                 <input id='income-description' type='text' v-model="nextDescription">
             </template>
             <template v-slot:footer>
-                <button @click="saveIncome">
-                    Add
+                <button @click="saveIncome(true)">
+                    Save and Close
+                </button>
+                <button @click="saveIncome(false)">
+                    Save and add another
                 </button>
             </template>
         </modal>
@@ -94,25 +97,22 @@ export default {
         closeModal() {
             this.isModalVisible = false;
         },
-        saveIncome() {
+        saveIncome(close) {
             // send dispatch
             this.$store.dispatch('postIncomeItem', {date: this.nextDate, amount: this.nextAmount, description: this.nextDescription, category: this.nextCategory})
-            .then(res => {
-                console.log(res);
+            .then(() => {
+                this.nextDate = '';
+                this.nextAmount = '';
+                this.nextCategory = '';
+                this.nextDescription = '';
+                if (close) {
+                    this.closeModal();
+                }
             })
             .catch(error => {
                 this.error = error;
                 this.errorState = true;
             });
-            
-            // if success
-                // show success message
-                // clear form values
-                // if close
-                    // close modal
-            // else
-                // show error state
-            return;
         },
     },
     computed: {
