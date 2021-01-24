@@ -12,7 +12,7 @@ class CategoryTypeSerializer(serializers.ModelSerializer):
     fields = '__all__'
 
 class IncomeSerializer(serializers.ModelSerializer):
-  date = serializers.DateField(format='%b. %d, %Y')
+  date = serializers.DateField(format='%b %d, %Y')
   class Meta:
     model = Income
     fields = '__all__'

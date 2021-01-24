@@ -72,6 +72,20 @@ const store = createStore({
         });
       });
     },
+    putIncomeItem (context, item) {
+      const {id, ...putItem} = item;
+      return new Promise((resolve, reject) => {
+        axios.put(`http://localhost:8000/income/${id}/`, putItem)
+        .then(res => {
+          context.dispatch('getIncomeItems');
+          resolve(res);
+        })
+        .catch(error => {
+          // should have an error dispatch here
+          reject(error);
+        });
+      });
+    },
     postExpenseItem (context, item) {
       axios.post('http://localhost:8000/expenses/', item)
       .then(() => {

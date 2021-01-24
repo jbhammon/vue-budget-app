@@ -7,28 +7,10 @@
                 <td style='min-width: 20%;'>${{ item.amount }}</td>
                 <td v-if='categories' >{{ categories[item.category] }}</td>
                 <td>{{ item.description }}</td>
-                <td><button @click="this.$store.dispatch('deleteIncomeItem', item.id)">x</button></td>
+                <td><button @click="this.$store.dispatch('deleteIncomeItem', item.id)">Delete</button></td>
+                <td><button @click="this.updateIncome(item)">Update</button></td>
             </tr>
         </table>
-
-        <!-- <label for="date">Date:</label>
-        <input type="date" id="date" name="date" v-model='nextDate'>
-
-        <label for='income-amount'>Amount</label>
-        <input id='income-amount' type='text' v-model='nextAmount'>
-
-        <label for='income-category'>Category</label>
-        <select id='income-category' name='category' v-model='nextCategory'>
-            <option v-bind:key=id v-for="(name, id) in categories" v-bind:value="id">
-                {{ name }}
-            </option>
-        </select>
-        
-        <label for='income-description'>Description</label>
-        <input id='income-description' type='text' v-model="nextDescription">
-        <button @click="this.$store.dispatch('postIncomeItem', {date: nextDate, amount: nextAmount, description: nextDescription, category: nextCategory})">
-            Add
-        </button> -->
 
         <button
             type="button"
@@ -96,23 +78,64 @@ export default {
         },
         closeModal() {
             this.isModalVisible = false;
+            this.resetModalFields();
+        },
+        resetModalFields() {
+            this.nextID = '';
+            this.nextDate = '';
+            this.nextAmount = '';
+            this.nextCategory = '';
+            this.nextDescription = '';
         },
         saveIncome(close) {
-            // send dispatch
-            this.$store.dispatch('postIncomeItem', {date: this.nextDate, amount: this.nextAmount, description: this.nextDescription, category: this.nextCategory})
-            .then(() => {
-                this.nextDate = '';
-                this.nextAmount = '';
-                this.nextCategory = '';
-                this.nextDescription = '';
-                if (close) {
-                    this.closeModal();
-                }
-            })
-            .catch(error => {
-                this.error = error;
-                this.errorState = true;
-            });
+            if (this.nextID === '') {
+                this.$store.dispatch('postIncomeItem', {date: this.nextDate, amount: this.nextAmount, description: this.nextDescription, category: this.nextCategory})
+                .then(() => {
+                    this.resetModalFields();
+                    if (close) {
+                        this.closeModal();
+                    }
+                })
+                .catch(error => {
+                    this.error = error;
+                    this.errorState = true;
+                });
+            } else {
+                this.$store.dispatch('putIncomeItem', {id: this.nextID, date: this.nextDate, amount: this.nextAmount, description: this.nextDescription, category: this.nextCategory})
+                .then(() => {
+                    this.resetModalFields();
+                    if (close) {
+                        this.closeModal();
+                    }
+                })
+                .catch(error => {
+                    this.error = error;
+                    this.errorState = true;
+                });
+            }
+        },
+        updateIncome(item) {
+            const prevDate = new Date(item.date);
+            let year = prevDate.getFullYear().toString();
+            let month = prevDate.getMonth() + 1;
+            if (month < 10) {
+                month = '0' + month.toString();
+            } else {
+                month = month.toString();
+            }
+            let date = prevDate.getDate() + 1;
+            if (date < 10) {
+                date = '0' + date.toString();
+            } else {
+                date = date.toString();
+            }
+
+            this.nextDate = year + '-' + month + '-' + date; 
+            this.nextAmount = item.amount;
+            this.nextCategory = item.category;
+            this.nextDescription = item.description;
+            this.nextID = item.id;
+            this.showModal();
         },
     },
     computed: {
@@ -135,6 +158,7 @@ export default {
     },
     data() {
         return {
+            nextID: '',
             nextDate: '',
             nextAmount: '',
             nextCategory: '',
