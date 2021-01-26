@@ -7,7 +7,8 @@
                 <td style='min-width: 20%;'>${{ expense.amount }}</td>
                 <td v-if='categories' >{{ categories[expense.category] }}</td>
                 <td>{{ expense.description }}</td>
-                <td><button @click="this.$store.dispatch('deleteExpenseItem', expense.id)">x</button></td>
+                <td><button @click="this.$store.dispatch('deleteExpenseItem', expense.id)">Delete</button></td>
+                <td><button @click="this.handleUpdateExpense(expense)">Update</button></td>
             </tr>
         </table>
 
