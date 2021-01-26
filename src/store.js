@@ -87,9 +87,30 @@ const store = createStore({
       });
     },
     postExpenseItem (context, item) {
-      axios.post('http://localhost:8000/expenses/', item)
-      .then(() => {
-        context.dispatch('getExpenseItems');
+      return new Promise((resolve, reject ) => {
+        axios.post('http://localhost:8000/expenses/', item)
+        .then(res => {
+          context.dispatch('getExpenseItems');
+          resolve(res);
+        })
+        .catch(error => {
+          // should have an error dispatch here
+          reject(error);
+        });
+      });
+    },
+    putExpenseItem (context, item) {
+      const {id, ...putItem} = item;
+      return new Promise((resolve, reject) => {
+        axios.put(`http://localhost:8000/expenses/${id}/`, putItem)
+        .then(res => {
+          context.dispatch('getExpenseItems');
+          resolve(res);
+        })
+        .catch(error => {
+          // should have an error dispatch here
+          reject(error);
+        });
       });
     },
     deleteBudgetItem (context, id) {
