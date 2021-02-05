@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, CategoryType, Income, Expense, BudgetItem
+from .models import Category, CategoryType, Income, Expense, Budget, BudgetItem
 
 class CategorySerializer(serializers.ModelSerializer):
   class Meta:
@@ -23,9 +23,12 @@ class ExpenseSerializer(serializers.ModelSerializer):
     model = Expense
     fields = ['id', 'amount', 'category', 'date', 'description']
 
-class BudgetItemSerializer(serializers.ModelSerializer):
-  time_period = serializers.DateField(format='%m/%Y')
+class BudgetSerialize(serializers.ModelSerializer):
+  class Meta:
+    model = Budget
+    fields = '__all__'
 
+class BudgetItemSerializer(serializers.ModelSerializer):
   class Meta:
     model = BudgetItem
     fields = '__all__'
