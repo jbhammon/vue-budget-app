@@ -31,11 +31,17 @@ class Expense(models.Model):
   def __str__(self):
     return str(self.amount) + ', ' + self.category.name + ', ' + str(self.date)
 
+class Budget(models.Model):
+  title = models.CharField(max_length=200)
+  start_date = models.DateField()
+  end_date = models.DateField()
+  notes = models.TextField(default='', blank=True, null=True)
+
 class BudgetItem(models.Model):
   amount = models.IntegerField(default=0)
   category = models.ForeignKey(Category, on_delete=models.CASCADE)
-  time_period = models.DateField() # Month/year this budget amount is for
-  description = models.TextField(default='', blank=True, null=True)
+  notes = models.TextField(default='', blank=True, null=True)
+  parent_budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
 
   def __str__(self):
-    return str(self.amount) + ', ' + self.category.name + ', ' + str(self.time_period)
+    return str(self.amount) + ', ' + self.category.name + ', ' + self.parent_budget.title
