@@ -18,6 +18,7 @@ class IncomeSerializer(serializers.ModelSerializer):
     fields = '__all__'
 
 class ExpenseSerializer(serializers.ModelSerializer):
+  date = serializers.DateField(format='%b %d, %Y')
   class Meta:
     model = Expense
     fields = ['id', 'amount', 'category', 'date', 'description']
