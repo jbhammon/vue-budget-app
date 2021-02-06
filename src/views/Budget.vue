@@ -1,35 +1,76 @@
 <template>
     <div>
         <h2>Your budget</h2>
+        <button
+            type='button'
+            class='btn'
+            @click='showModal'
+        >
+            Create budget
+        </button>
+
         <table>
-            <tr class='data-table--row' v-bind:key='item.id' v-for='item in budget'>
-                <td style='min-width: 20%;'>${{ item.amount }}</td>
-                <td v-if='categories' >{{ categories[item.category] }}</td>
-                <td>{{ item.description }}</td>
-                <td><button @click="this.$store.dispatch('deleteBudgetItem', item.id)">x</button> </td>
+            <tr>
+                <th>Title</th>
+                <th>Dates</th>
             </tr>
         </table>
-        <label for='budget-amount'>Amount</label>
-        <input id='budget-amount' type='text' v-model='nextAmount'>
 
-        <label for='budget-category'>Category</label>
-        <select id='budget-category' name='category' v-model='nextCategory'>
-            <option v-bind:key=id v-for='(name, id) in categories' v-bind:value='id'>
-                {{ name }}
-            </option>
-        </select>
-
-        <label for='budget-description'>Description</label>
-        <input id='budget-description' type='text' v-model='nextDescription'>
-        <button @click="this.$store.dispatch('postBudgetItem', {time_period: '2021-01-01', amount: nextAmount, description: nextDescription, category: nextCategory})">
+        <!-- <button 
+            @click="this.$store.dispatch('postBudgetItem', {time_period: '2021-01-01', amount: nextAmount, description: nextDescription, category: nextCategory})">
             Add
-        </button>
+        </button> -->
+
+        <modal
+            v-show='isModalVisible'
+            @close='closeModal'
+        >
+            <template v-slot:header>
+                Create a new budget
+                <button
+                    type='button'
+                    class='btn-close'
+                    @click='closeModal'
+                    aria-label='Close modal'
+                >
+                    x
+                </button>
+            </template>
+            <template v-slot:body>
+                <label for='title'>Title</label>
+                <input id='title' type='text' v-model='nextTitle'>
+
+                <label for="start-date">Start Date:</label>
+                <input type="date" id="start-date" name="start-date" v-model='nextStartDate'>
+
+                <label for="end-date">End Date:</label>
+                <input type="date" id="end-date" name="end-date" v-model='nextStartDate'>
+            </template>
+            <template v-slot:footer>
+                <button @click='createBudget'>
+                    Create
+                </button>
+            </template>
+        </modal>
     </div>
 </template>
 
 <script>
+import modal from '../components/Modal';
+
 export default {
     name: "Budget",
+    components: {
+        modal,
+    },
+    methods: {
+        showModal() {
+            this.isModalVisible = true;
+        },
+        closeModal() {
+            this.isModalVisible = false;
+        }
+    },
     computed: {
         budget () {
             return this.$store.state.budget;
@@ -50,9 +91,10 @@ export default {
     },
     data () {
         return {
-            nextAmount: '',
-            nextCategory: '',
-            nextDescription: '',
+            nextTitle: '',
+            nextStartDate: '',
+            nextEndDate: '',
+            isModalVisible: false,
         }
     },
 }
