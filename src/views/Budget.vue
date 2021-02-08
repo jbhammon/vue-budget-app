@@ -44,7 +44,10 @@
                 <input type="date" id="start-date" name="start-date" v-model='nextStartDate'>
 
                 <label for="end-date">End Date:</label>
-                <input type="date" id="end-date" name="end-date" v-model='nextStartDate'>
+                <input type="date" id="end-date" name="end-date" v-model='nextEndDate'>
+
+                <label for='title'>Notes</label>
+                <input id='title' type='text' v-model='nextNotes'>
             </template>
             <template v-slot:footer>
                 <button @click='createBudget'>
@@ -69,7 +72,16 @@ export default {
         },
         closeModal() {
             this.isModalVisible = false;
-        }
+        },
+        createBudget() {
+            this.$store.dispatch('postBudget', {title: this.nextTitle, start_date: this.nextStartDate, end_date: this.nextEndDate, notes: ''})
+            .then(() => {
+                this.closeModal();
+            })
+            .catch(error => {
+                this.error = error;
+            });
+        },
     },
     computed: {
         budget () {
@@ -94,7 +106,9 @@ export default {
             nextTitle: '',
             nextStartDate: '',
             nextEndDate: '',
+            nextNotes: '',
             isModalVisible: false,
+            error: null,
         }
     },
 }
