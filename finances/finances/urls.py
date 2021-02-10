@@ -22,6 +22,7 @@ router = routers.DefaultRouter()
 router.register(r'category', views.CategoryViewSet, 'category')
 router.register(r'income', views.IncomeViewSet, 'income')
 router.register(r'expenses', views.ExpenseViewSet, 'expenses')
+router.register(r'budgets', views.BudgetViewSet, 'budgets')
 router.register(r'budget_items', views.BudgetItemViewSet, 'budget_items')
 
 urlpatterns = [

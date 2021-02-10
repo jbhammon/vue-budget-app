@@ -10,10 +10,12 @@
         </button>
 
         <table>
-            <tr>
-                <th>Title</th>
-                <th>Dates</th>
+            <tr class='data-table--row' v-bind:key='budget.id' v-for='budget in budgets'>
+                <td>{{ budget.title }}</td>
+                <td>{{ budget.start_date }}</td>
+                <td>{{ budget.end_date }}</td>
             </tr>
+            
         </table>
 
         <!-- <button 
@@ -84,8 +86,8 @@ export default {
         },
     },
     computed: {
-        budget () {
-            return this.$store.state.budget;
+        budgets () {
+            return this.$store.state.budgets;
         },
         categories () {
             if (this.$store.state.categories == null) {

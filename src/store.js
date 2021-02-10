@@ -1,7 +1,6 @@
 import { createStore } from 'vuex'
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-import { reject } from 'core-js/fn/promise';
 
 const store = createStore({
   state () {
@@ -13,7 +12,7 @@ const store = createStore({
   },
   actions: {
     init (context) {
-      context.dispatch('getBudgetItems');
+      context.dispatch('getBudgets');
       context.dispatch('getCategoryItems');
       context.dispatch('getIncomeItems');
       context.dispatch('getExpenseItems');
@@ -133,7 +132,7 @@ const store = createStore({
       });
     },
     getBudgets (context) {
-      axios.get('http://localhost:8000/budget/')
+      axios.get('http://localhost:8000/budgets/')
       .then(res => {
         context.commit('storeSetBudgets', res.data);
       })
@@ -143,9 +142,9 @@ const store = createStore({
     },
     postBudget (context, budget) {
       return new Promise((resolve, reject) => {
-        axios.poist('http://localhost:8000/budget/', budget)
-        then(res => {
-          context.dispatch('getBugets'); // <-- TODO
+        axios.post('http://localhost:8000/budgets/', budget)
+        .then(res => {
+          context.dispatch('getBudgets');
           resolve(res);
         })
         .catch(error => {
@@ -183,20 +182,13 @@ const store = createStore({
       console.error(error);
     },
 
-    addBudget (state, newItem) {
-      const id = uuidv4();
-      state.budget = [
-        ...state.budget,
-        {
-          id: id,
-          title: newItem.nextCategory,
-          amount: parseInt(newItem.nextAmount),
-        },
-      ]
+    storeSetBudgets(state, newItems) {
+      state.budgets = [...newItems];
     },
-    delBudget (state, id) {
-      state.budget = state.budget.filter(item => item.id !== id);
+    storeSetBudgetsError(state, error) {
+      console.error(error);
     },
+
     addExpense (state, newAmount) {
       const id = uuidv4();
       state.expenses = [
