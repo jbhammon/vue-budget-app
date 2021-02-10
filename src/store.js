@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
+import { reject } from 'core-js/fn/promise';
 
 const store = createStore({
   state () {
@@ -17,15 +18,15 @@ const store = createStore({
       context.dispatch('getIncomeItems');
       context.dispatch('getExpenseItems');
     },
-    getBudgetItems (context) {
-      axios.get('http://localhost:8000/budget_items/')
-      .then(res => {
-        context.commit('storeSetBudget', res.data);
-      })
-      .catch(err => {
-        context.commit('storeSetBudgetError', err);
-      });
-    },
+    // getBudgetItems (context) {
+    //   axios.get('http://localhost:8000/budget_items/')
+    //   .then(res => {
+    //     context.commit('storeSetBudget', res.data);
+    //   })
+    //   .catch(err => {
+    //     context.commit('storeSetBudgetError', err);
+    //   });
+    // },
     getCategoryItems (context) {
       axios.get('http://localhost:8000/category/')
       .then(res => {
@@ -130,11 +131,32 @@ const store = createStore({
       .then(() => {
         context.dispatch('getExpenseItems');
       });
-    }
+    },
+    getBudgets (context) {
+      axios.get('http://localhost:8000/budget/')
+      .then(res => {
+        context.commit('storeSetBudgets', res.data);
+      })
+      .catch(err => {
+        context.commit('storeSetBudgetsError', err);
+      });
+    },
+    postBudget (context, budget) {
+      return new Promise((resolve, reject) => {
+        axios.poist('http://localhost:8000/budget/', budget)
+        then(res => {
+          context.dispatch('getBugets'); // <-- TODO
+          resolve(res);
+        })
+        .catch(error => {
+          reject(error);
+        });
+      });
+    },
   },
   mutations: {
     storeSetBudget(state, newItems) {
-      state.budget = [...newItems];
+      state.budgets = [...newItems];
     },
     storeSetBudgetError(state, error) {
       console.error(error);
