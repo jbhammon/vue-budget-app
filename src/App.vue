@@ -11,7 +11,7 @@
             <router-link class='nav-item' to='/'>
               Overview
             </router-link>
-            <router-link class='nav-item' to='/budget'>Budget</router-link>
+            <router-link class='nav-item' to='/budgets'>Budget</router-link>
             <router-link class='nav-item' to='/expenses'>Expenses</router-link>
             <router-link class='nav-item' to='/income'>Income</router-link>
           </div>

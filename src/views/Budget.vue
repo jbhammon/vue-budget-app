@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>Your budget</h2>
+        <h2>Budgets</h2>
         <button
             type='button'
             class='btn'
@@ -10,7 +10,7 @@
         </button>
 
         <table>
-            <tr class='data-table--row' v-bind:key='budget.id' v-for='budget in budgets'>
+            <tr class='data-table--row' v-bind:key='budget.id' v-for='budget in budgets' @click='openBudgetDetail(budget.id)'>
                 <td>{{ budget.title }}</td>
                 <td>{{ budget.start_date }}</td>
                 <td>{{ budget.end_date }}</td>
@@ -83,6 +83,9 @@ export default {
             .catch(error => {
                 this.error = error;
             });
+        },
+        openBudgetDetail(budgetID) {
+            this.$router.push(`/budget/${budgetID}`);
         },
     },
     computed: {
