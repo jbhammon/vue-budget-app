@@ -31,6 +31,19 @@ class Expense(models.Model):
   def save(self, *args, **kwargs):
     # Need to think about how to update the aggregated spending amounts
     # on the BudgetItems when we create, update, or delete Expense records
+    print('saved it bruh')
+    items_to_update = BudgetItem.objects.filter(
+      category=self.category
+    )
+    # This will make the query faster, but why doesn't it work??
+    # .filter(
+    #   parent_budget__start_date__gte=self.date
+    # ).filter(
+    #   parent_budget__end_date__lte=self.date
+    # )
+    for item in items_to_update:
+      print(item)
+      item.save()
 
     # Call the parent save() method to save in the DB
     super().save(*args, **kwargs) 
@@ -43,6 +56,9 @@ class Budget(models.Model):
   start_date = models.DateField()
   end_date = models.DateField()
   notes = models.TextField(default='', blank=True, null=True)
+
+  def __str__(self):
+    return self.title
 
 class BudgetItem(models.Model):
   amount = models.IntegerField(default=0)
