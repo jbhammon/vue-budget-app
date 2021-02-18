@@ -14,7 +14,7 @@ class Category(models.Model):
     return self.name
 
 class Income(models.Model):
-  amount = models.IntegerField(default=0)
+  amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
   category = models.ForeignKey(Category, on_delete=models.CASCADE)
   date = models.DateField()
   description = models.TextField(default='', blank=True, null=True)
@@ -23,7 +23,7 @@ class Income(models.Model):
     return str(self.amount) + ', ' + self.category.name + ', ' + str(self.date)
 
 class Expense(models.Model):
-  amount = models.IntegerField(default=0)
+  amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
   category = models.ForeignKey(Category, on_delete=models.CASCADE)
   date = models.DateField()
   description = models.TextField(default='', blank=True, null=True)
@@ -61,7 +61,7 @@ class Budget(models.Model):
     return self.title
 
 class BudgetItem(models.Model):
-  amount = models.IntegerField(default=0)
+  amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
   spent = models.DecimalField(max_digits=8, decimal_places=2, default=0)
   category = models.ForeignKey(Category, on_delete=models.CASCADE)
   notes = models.TextField(default='', blank=True, null=True)
