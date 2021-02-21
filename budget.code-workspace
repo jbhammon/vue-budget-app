@@ -3,5 +3,8 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"settings": {
+		"python.pythonPath": "finances\\.venv\\Scripts\\python.exe"
+	}
 }

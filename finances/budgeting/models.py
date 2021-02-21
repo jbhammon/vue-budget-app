@@ -29,9 +29,11 @@ class Expense(models.Model):
   description = models.TextField(default='', blank=True, null=True)
 
   def save(self, *args, **kwargs):
+    # Call the parent save() method to save in the DB
+    super(Expense, self).save(*args, **kwargs) 
+
     # Need to think about how to update the aggregated spending amounts
-    # on the BudgetItems when we create, update, or delete Expense records
-    print('saved it bruh')
+    # on the BudgetItems when we delete Expense records
     items_to_update = BudgetItem.objects.filter(
       category=self.category
     )
@@ -42,11 +44,22 @@ class Expense(models.Model):
     #   parent_budget__end_date__lte=self.date
     # )
     for item in items_to_update:
-      print(item)
       item.save()
 
+  def delete(self, *args, **kwargs):
+    category = self.category
+    
     # Call the parent save() method to save in the DB
-    super().save(*args, **kwargs) 
+    super(Expense, self).delete(*args, **kwargs)
+
+    items_to_update = BudgetItem.objects.filter(
+      category=category
+    )
+
+    for item in items_to_update:
+      item.save()
+    
+    
 
   def __str__(self):
     return str(self.amount) + ', ' + self.category.name + ', ' + str(self.date)
@@ -68,6 +81,7 @@ class BudgetItem(models.Model):
   parent_budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
 
   def save(self, *args, **kwargs):
+    print('saving BudgetItem')
     # calculate actual spending for this item
     start_date = self.parent_budget.start_date
     end_date = self.parent_budget.end_date
@@ -80,10 +94,15 @@ class BudgetItem(models.Model):
     ).aggregate(
       models.Sum('amount')
     )
-    self.spent = aggregate_dict['amount__sum']
+    # We need to watch for the aggregation being null if there are no
+    # expenses for this BudgetItem now. If so, make 'spent' zero.
+    if aggregate_dict['amount__sum']:
+      self.spent = aggregate_dict['amount__sum']
+    else:
+      self.spent = 0
 
     # Call the parent save() method to save in the DB
-    super().save(*args, **kwargs)
+    super(BudgetItem, self).save(*args, **kwargs)
 
   def __str__(self):
     return str(self.amount) + ', ' + self.category.name + ', ' + self.parent_budget.title

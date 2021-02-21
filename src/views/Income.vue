@@ -123,7 +123,7 @@ export default {
             } else {
                 month = month.toString();
             }
-            let date = prevDate.getDate() + 1;
+            let date = prevDate.getDate();
             if (date < 10) {
                 date = '0' + date.toString();
             } else {
