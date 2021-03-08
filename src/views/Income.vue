@@ -20,6 +20,12 @@
             Add income
         </button>
 
+        <ul>
+            <li>
+                
+            </li>
+        </ul>
+
         <modal
             v-show="isModalVisible"
             @close="closeModal"    

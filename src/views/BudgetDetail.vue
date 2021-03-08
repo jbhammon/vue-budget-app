@@ -84,7 +84,7 @@ export default {
             this.nextCategory = '';
         },
         getItems() {
-            axios.get('http://localhost:8000/budget_items?', {
+            axios.get('http://localhost:8000/budget_items', {
                 params: {
                     parent_budget: this.$route.params.id,
                 }

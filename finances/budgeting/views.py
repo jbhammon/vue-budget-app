@@ -24,5 +24,11 @@ class BudgetViewSet(viewsets.ModelViewSet):
   serializer_class = BudgetSerialize
 
 class BudgetItemViewSet(viewsets.ModelViewSet):
-  queryset = BudgetItem.objects.all()
   serializer_class = BudgetItemSerializer
+
+  def get_queryset(self):
+    queryset = BudgetItem.objects.all()
+    budget = self.request.query_params.get('parent_budget', None)
+    if budget is not None:
+      queryset = queryset.filter(parent_budget=budget)
+    return queryset
